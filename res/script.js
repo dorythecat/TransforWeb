@@ -246,7 +246,7 @@ if (window.location.href.includes("tsf_editor.html")) {
             alert("Name must be at least 2 characters long!");
             return;
         }
-        if (new_tf_img.value.length < 15 || new_tf_img.value.length > 1024 || !new_tf_img.value.startsWith("http")) {
+        if (new_tf_img.value.length < 15 || new_tf_img.value.length > 1024 || !new_tf_img.value.lower().startsWith("http")) {
             alert("Image URL must be a valid URL!");
             return;
         }

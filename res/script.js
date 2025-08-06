@@ -9,7 +9,7 @@ const strJSON = (integer) => {
 // Cookie utilities
 const setCookie = (cname, cvalue, exmins) => {
     const expires = new Date(Date.now() + exmins * 60 * 1000).toUTCString();
-    document.cookie = `${cname}=${cvalue};Expires=${expires};Path=/;Secure;SameSite=Strict;`;
+    document.cookie = `${cname}=${cvalue};Expires=${expires};Path=/;SameSite=Strict;`;
 };
 
 const getCookie = (cname) => {

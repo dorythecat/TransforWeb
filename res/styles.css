@@ -294,6 +294,8 @@ button#submit-tf-btn:hover {
     min-width: 160px;
     box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
     z-index: 1;
+    border-radius: 10px;
+    margin: 40px;
 }
 
 .dropdown_content a {
@@ -430,7 +432,6 @@ option {
     .dropdown_content a.sub_active {
         background-color: var(--accent-color);
         color: var(--text-secondary);
-        border: none;
     }
     .dropdown_content a {
         border-radius: 0;

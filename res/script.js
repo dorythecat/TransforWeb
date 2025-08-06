@@ -113,7 +113,7 @@ if (getCookie("token") !== "") {
 }
 
 login.onclick = function (e) {
-    window.location.href = "https://discord.com/oauth2/authorize?client_id=1274436972621987881&response_type=code&redirect_uri=http%3A%2F%2F127.0.0.1%3A8000%2Flogin%3Fredirect_url%3Dhttp%253A%252F%252Flocalhost%253A63342%252FTransforMate%252Fweb%252Findex.html&scope=identify+guilds";
+    window.location.href = "https://discord.com/oauth2/authorize?client_id=1274436972621987881&response_type=code&redirect_uri=http%3A%2F%2Fwww.transformate.live%3A8000%2Flogin%3Fredirect_url%3Dhttp%253A%252F%252Fwww.transformate.live&scope=identify+guilds";
 }
 
 logout.onclick = async function (e) {

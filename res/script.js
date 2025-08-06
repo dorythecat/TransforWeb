@@ -113,7 +113,7 @@ if (getCookie("token") !== "") {
 }
 
 login.onclick = function (e) {
-    window.location.href = "https://discord.com/oauth2/authorize?client_id=1274436972621987881&response_type=code&redirect_uri=http%3A%2F%2Fapi.transformate.live%2Flogin%3Fredirect_url%3Dwww.transformate.live&scope=identify+guilds";
+    window.location.href = "https://discord.com/oauth2/authorize?client_id=1274436972621987881&response_type=code&redirect_uri=http%3A%2F%2Fapi.transformate.live%2Flogin%3Fredirect_url%3Dhttp%3Awww.transformate.live&scope=identify+guilds";
 }
 
 logout.onclick = async function (e) {

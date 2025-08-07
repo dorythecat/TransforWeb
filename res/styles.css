@@ -374,6 +374,17 @@ option {
   100% { transform: rotate(360deg)}
 }
 
+footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background-color: var(--bg-secondary);
+    color: var(--text-secondary);
+    text-align: center;
+    padding: 10px;
+}
+
 @media screen and (max-width: 1000px) {
     .topnav {
         position: relative;
@@ -394,11 +405,6 @@ option {
     .topnav.responsive {
         position: relative;
     }
-    .topnav.responsive a.icon {
-        position: absolute;
-        right: 0;
-        top: 0;
-    }
     .topnav.responsive a {
         float: none;
         display: block;
@@ -417,10 +423,9 @@ option {
     div#new_tf_container {
         width: 100%;
     }
-    .topnav .dropdown {
-        float: none;
-    }
-    .topnav .dropdown .dropbtn {
+    .topnav .dropdown,
+    .topnav .dropdown .dropbtn,
+    .topnav a.hidden {
         display: none;
     }
     .dropdown .dropdown_content {
@@ -445,8 +450,5 @@ option {
         display: block;
         margin: 0;
         padding: 0;
-    }
-    .topnav a.hidden {
-        display: none;
     }
 }

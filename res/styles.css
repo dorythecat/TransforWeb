@@ -146,10 +146,6 @@ label {
     margin: 20px;
 }
 
-.form {
-    margin-bottom: 20px;
-}
-
 .form_group {
     margin-bottom: 15px;
 }
@@ -211,7 +207,7 @@ button.btn:hover {
     box-shadow: 0 0 10px var(--bg-secondary);
 }
 
-button#submit-tf-btn {
+button#submit_tf_btn {
     margin-top: 10px;
     font-size: 250%;
     padding: 10px 20px;
@@ -221,7 +217,7 @@ button#submit-tf-btn {
     border: var(--text-primary) solid 2px;
 }
 
-button#submit-tf-btn:hover {
+button#submit_tf_btn:hover {
     background-color: var(--hover-bg);
     color: var(--accent-color);
     box-shadow: 0 0 20px var(--accent-color);

@@ -6,8 +6,7 @@ TransforWeb is the official web companion for the
 
 It is a purely static site that hosts tools and interfaces to make the most use out
 of the bot. For now, this only includes a TSF editor, with the ability to apply
-the transformation through the API, but new features will be added on a regular
-basis.
+the transformation through the API, but new features will be added regularly.
 
 Future planned features include:
 

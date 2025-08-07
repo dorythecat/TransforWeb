@@ -112,23 +112,21 @@ if (getCookie("token") !== "") {
     logout.classList.remove("hidden")
 }
 
-login.onclick = function (e) {
+login.onclick = function () {
     window.location.href = "https://discord.com/oauth2/authorize?client_id=1274436972621987881&response_type=code&redirect_uri=http%3A%2F%2Fapi.transformate.live%2Flogin%3Fredirect_url%3Dhttp%3A%2F%2Fwww.transformate.live&scope=identify+guilds";
 }
 
-logout.onclick = async function (e) {
-    try {
-        const response = await fetch(`${TM_API}/logout`, {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${getCookie('token')}`
-            }
-        });
-    } catch (error) {
-        console.error('Error during logout:', error);
-    }
-    setCookie("token", null, -1);
-    window.location.href = "index.html";
+logout.onclick = async function () {
+    fetch(`${TM_API}/logout`, {
+        method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${getCookie('token')}`
+        }
+    }).catch(e => console.error('Error during logout:', e)).then(r => {
+        if (r.status !== 200) return r.text().then(r => alert(r));
+        setCookie("token", null, -1);
+        window.location.href = "index.html";
+    })
 }
 
 // TSF Editor page
@@ -148,17 +146,18 @@ if (window.location.href.includes("tsf_editor.html")) {
     };
 
     if (getCookie("token") !== "") {
-        const response = fetch(`${TM_API}/users/me/discord`, {
+        fetch(`${TM_API}/users/me/discord`, {
             method: "GET",
             headers: {
                 "Authorization": `Bearer ${getCookie("token")}`
             }
-        }).catch(e => console.error(e)).then(r => r.text()).then(r => strJSON(r));
-
-        response.then(r => {
-            elements.new_tf_name.value = r.username;
-            elements.new_tf_img.value = `https://cdn.discordapp.com/avatars/${r.id}/${r.avatar}.png`;
-        })
+        }).catch(e => console.error(e)).then(r => {
+            if (r.status !== 200) return r.text().then(r => alert(r));
+            r.text().then(r => strJSON(r)).then(r => {
+                elements.new_tf_name.value = r.username;
+                elements.new_tf_img.value = `https://cdn.discordapp.com/avatars/${r.id}/${r.avatar}.png`;
+            })
+        });
     }
 
     const sliderPairs = [
@@ -288,8 +287,8 @@ if (window.location.href.includes("tsf_editor.html")) {
             new_tf_output.select();
             new_tf_output.setSelectionRange(0, 99999); // Mobile compatibility
             navigator.clipboard.writeText(new_tf_output.value).then(
-                r => alert("Copied to clipboard!"),
-                r => alert("Failed to copy to clipboard!")
+                () => alert("Copied to clipboard!"),
+                () => alert("Failed to copy to clipboard!")
             );
         }
 
@@ -310,44 +309,46 @@ if (window.location.href.includes("tsf_editor.html")) {
             // Make the throbber visible
             loading_container.style.display = "block";
 
-            const response = fetch(`${TM_API}/users/me/discord/servers`, {
+            fetch(`${TM_API}/users/me/discord/servers`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${getCookie('token')}`
                 }
-            }).catch(e => console.error(e)).then(r => r.text()).then(r => strJSON(r));
+            }).catch(e => console.error(e)).then(r => {
+                if (r.status !== 200) return r.text().then(r => alert(r));
+                r.text().then(r => strJSON(r)).then(servers => {
+                    loaded_servers = servers;
+                    const serverSelect = document.getElementById("tf_output_server");
+                    for (const server of loaded_servers) {
+                        const option = document.createElement("option");
+                        option.value = server['id'];
+                        option.textContent = server['name'];
+                        serverSelect.appendChild(option);
+                    }
 
-            await response.then(servers => {
-                loaded_servers = servers;
-                const serverSelect = document.getElementById("tf_output_server");
-                for (const server of loaded_servers) {
-                    const option = document.createElement("option");
-                    option.value = server['id'];
-                    option.textContent = server['name'];
-                    serverSelect.appendChild(option);
-                }
+                    const button = document.getElementById("apply_tf_output");
+                    button.onclick = async () => {
+                        const server = serverSelect.value;
+                        if (server === "") return;
+                        fetch(`${TM_API}/users/me/tsf/${server}`, {
+                            method: 'PUT',
+                            headers: {
+                                'Authorization': `Bearer ${getCookie('token')}`,
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(tsf_data)
+                        }).catch(e => console.error(e)).then(r => {
+                            if (r.status !== 200) return r.text().then(r => alert(r));
+                            r.json().then(r => {
+                                alert("Transformation applied successfully!");
+                                window.location.href = "tsf_editor.html";
+                            });
+                        });
+                    }
 
-                const button = document.getElementById("apply_tf_output");
-                button.onclick = async () => {
-                    const server = serverSelect.value;
-                    if (server === "") return;
-                    const response = fetch(`${TM_API}/users/me/tsf/${server}`, {
-                        method: 'PUT',
-                        headers: {
-                            'Authorization': `Bearer ${getCookie('token')}`,
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(tsf_data)
-                    }).catch(e => console.error(e)).then(r => r.json());
-
-                    await response.then(r => {
-                        alert("Transformation applied successfully!");
-                        window.location.href = "tsf_editor.html";
-                    });
-                }
-
-                serverSelect.classList.remove("hidden");
-                button.classList.remove("hidden");
+                    serverSelect.classList.remove("hidden");
+                    button.classList.remove("hidden");
+                });
             });
 
             loading_container.style.display = "none";

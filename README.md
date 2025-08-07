@@ -1,3 +1,5 @@
+![GitHub last commit](https://img.shields.io/github/last-commit/dorythecat/TransforWeb)
+
 # TransforWeb
 TransforWeb is the official web companion for the
 [TransforMate Discord Bot and API](https://github.com/dorythecat/TransforMate).

@@ -58,7 +58,7 @@ body {
     float: right;
 }
 
-.hidden,
+.topnav a.hidden,
 #tf_data_form {
     display: none;
 }

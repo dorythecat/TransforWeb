@@ -59,7 +59,7 @@ body {
     color: var(--hover-text);
 }
 
-.topnav a.left {
+.topnav a.right {
     float: right;
 }
 

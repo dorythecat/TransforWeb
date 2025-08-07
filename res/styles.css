@@ -1,7 +1,6 @@
 :root {
   /* Dark theme (default) */
   --bg-page: #1a1a1a;
-  --bg-primary: #aaa;
   --bg-secondary: #2d2d2d;
   --text-primary: #424242;
   --text-secondary: #aaa;
@@ -14,10 +13,6 @@
 [data_theme="light"] {
   /* Light theme */
   --bg-page: #eee;
-  --bg-primary: #aaa;
-  --bg-secondary: #2d2d2d;
-  --text-primary: #424242;
-  --text-secondary: #aaa;
   --accent-color: #8b7355;
   --hover-bg: #3d3d3d;
   --hover-text: #eee;
@@ -28,6 +23,7 @@ body {
     background-color: var(--bg-page);
     margin: 0;
     font-family: Arial, Helvetica, sans-serif;
+    user-select: none;
 }
 
 .topnav {
@@ -46,7 +42,6 @@ body {
     font-size: 17px;
     color: var(--text-secondary);
     cursor: pointer;
-    user-select: none;
 }
 
 .topnav a.active {
@@ -63,39 +58,41 @@ body {
     float: right;
 }
 
-.topnav a.hidden {
+.hidden,
+#tf_data_form {
     display: none;
 }
 
 .topnav a.icon {
     display: none;
-    height: 46px;
-    width: 46px; /* Make it square */
+    height: 48px;
+    width: 48px; /* Make it square, matching with the height of the navbar */
     padding: 0;
     position: relative;
 }
 
-.hamburger {
+.hamburger,
+.hamburger:before,
+.hamburger:after {
     position: absolute;
-    top: 50%;
-    left: 30%;
-    right: 70%;
     width: 20px;
     height: 2px;
     background: var(--text-secondary);
-    transition: background 0.2s ease-out;
+    transition: all .2s ease-out;
+    transform-origin: center;
+}
+
+.hamburger {
+    top: 50%;
+    left: 30%;
+    right: 70%;
 }
 
 .hamburger:before,
 .hamburger:after {
-    position: absolute;
     content: '';
     left: 0;
     width: 100%;
-    height: 2px;
-    background: var(--text-secondary);
-    transition: all 0.2s ease-out;
-    transform-origin: center;
 }
 
 .hamburger:before {
@@ -122,7 +119,7 @@ body {
 
 .page_content {
     color: var(--text-primary);
-    background-color: var(--bg-primary);
+    background-color: #aaa;
     margin: 5% 20%;
     font-size: 150%;
     text-align: center;
@@ -138,10 +135,6 @@ input[type=text] {
 
 input[type=checkbox] {
     margin-right: 10px;
-}
-
-#tf_data_form {
-    display: none;
 }
 
 label {
@@ -223,15 +216,15 @@ button#submit-tf-btn {
     font-size: 250%;
     padding: 10px 20px;
     border-radius: 10px;
-    background-color: #675c4d;
-    color: #aaa;
-    border: #424242 solid 2px;
+    background-color: var(--accent-color);
+    color: var(--hover-bg);
+    border: var(--text-primary) solid 2px;
 }
 
 button#submit-tf-btn:hover {
-    background-color: #aaa;
-    color: #675c4d;
-    box-shadow: 0 0 20px #675c4d;
+    background-color: var(--hover-bg);
+    color: var(--accent-color);
+    box-shadow: 0 0 20px var(--accent-color);
 }
 
 #new_tf_output {
@@ -248,7 +241,7 @@ button#submit-tf-btn:hover {
     border-radius: 5px;
     background: var(--bg-secondary);
     outline: none;
-    opacity: 0.7;
+    opacity: .7;
     -webkit-transition: .2s;
     transition: opacity .2s;
 }
@@ -256,13 +249,9 @@ button#submit-tf-btn:hover {
 .slider::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
-    width: 25px;
-    height: 25px;
-    border-radius: 50%;
-    background: var(--accent-color);
-    cursor: pointer;
 }
 
+.slider::-webkit-slider-thumb,
 .slider::-moz-range-thumb {
     width: 25px;
     height: 25px;
@@ -292,7 +281,7 @@ button#submit-tf-btn:hover {
     position: absolute;
     background-color: var(--bg-secondary);
     min-width: 160px;
-    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,.2);
     z-index: 1;
     border-radius: 10px;
     margin: 40px;
@@ -305,7 +294,6 @@ button#submit-tf-btn:hover {
     display: block;
     text-align: left;
     cursor: pointer;
-    user-select: none;
     border-radius: 10px;
     border: 5px var(--bg-secondary) solid;
 }
@@ -321,27 +309,19 @@ button#submit-tf-btn:hover {
     border-radius: 10px;
 }
 
-.hidden {
-    display: none;
-}
-
-select {
-    width: 100%;
-    border-radius: 10px;
-    padding: 10px;
-    margin: 10px;
-    font-size: 150%;
-    background-color: var(--bg-secondary);
-    color: var(--text-secondary);
-    border: 2px var(--bg-secondary) solid;
-}
-
+select,
 option {
     background-color: var(--bg-secondary);
     color: var(--text-secondary);
     border: 2px var(--bg-secondary) solid;
     border-radius: 10px;
-    user-select: none;
+}
+
+select {
+    width: 100%;
+    padding: 10px;
+    margin: 10px;
+    font-size: 150%;
 }
 
 .loader {
@@ -370,8 +350,8 @@ option {
 }
 
 @keyframes rotate {
-  0% {  transform: rotate(0)}
-  100% { transform: rotate(360deg)}
+  0% {  transform: rotate(0) }
+  100% { transform: rotate(360deg) }
 }
 
 footer {
@@ -386,11 +366,15 @@ footer {
 }
 
 @media screen and (max-width: 1000px) {
-    .topnav {
+    .topnav,
+    .topnav.responsive {
         position: relative;
         margin: 2%;
     }
-    .topnav a:not(:first-child), .topnav .dropdown {
+    .topnav a:not(:first-child), .topnav .dropdown,
+    .topnav .dropdown,
+    .topnav .dropdown .dropbtn,
+    .topnav.responsive a.hidden {
         display: none;
     }
     .topnav a.icon {
@@ -402,31 +386,17 @@ footer {
     .topnav a.icon:hover {
         background-color: var(--hover-text);
     }
-    .topnav.responsive {
-        position: relative;
-    }
-    .topnav.responsive a {
-        float: none;
-        display: block;
-        text-align: left;
-    }
+    .topnav.responsive a,
     .topnav.responsive .dropdown {
+        text-align: left;
         float: none;
         display: block;
-    }
-    .topnav.responsive .dropdown-content {
-        position: relative;
     }
     .page_content {
         margin: 2%;
     }
     div#new_tf_container {
         width: 100%;
-    }
-    .topnav .dropdown,
-    .topnav .dropdown .dropbtn,
-    .topnav a.hidden {
-        display: none;
     }
     .dropdown .dropdown_content {
         display: block;

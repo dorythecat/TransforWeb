@@ -45,10 +45,10 @@ function encode_tsf(into, image_url, options = {
         !arr?.length ? ["0", ""] : ["1", arr.map(({content, value}) => `${content}|${value}`).join(",")];
 
     let number = 0;
-    number = number & (Number(options.big) << 0);
-    number = number & (Number(options.small) << 1);
-    number = number & (Number(options.hush) << 2);
-    number = number & (Number(options.backwards) << 3);
+    number += (Number(options.big) << 0);
+    number += (Number(options.small) << 1);
+    number += (Number(options.hush) << 2);
+    number += (Number(options.backwards) << 3);
 
     // Generate arrays and make it into the proper data to return
     return ["15",

@@ -1,5 +1,6 @@
 // Global variables
-TM_API = "http://api.transformate.live";
+const TM_API = "http://api.transformate.live";
+const URL_REGEX = /[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/
 
 // General utility
 const strJSON = (integer) => {
@@ -237,6 +238,8 @@ if (window.location.href.includes("tsf_editor.html")) {
 
     elements.new_tf_submit.onclick = () => {
         const { new_tf_name, new_tf_img } = elements;
+        new_tf_name.value = new_tf_name.value.trim();
+        new_tf_img.value = new_tf_img.value.trim();
         if (!new_tf_name.value || !new_tf_img.value) {
             alert("Please fill out all required fields!");
             return;
@@ -245,10 +248,13 @@ if (window.location.href.includes("tsf_editor.html")) {
             alert("Name must be at least 2 characters long!");
             return;
         }
-        if (new_tf_img.value.length < 15 || new_tf_img.value.length > 1024 || !new_tf_img.value.lower().startsWith("http")) {
+        const ok = URL_REGEX.exec(new_tf_img.value);
+        if (!ok) {
             alert("Image URL must be a valid URL!");
             return;
         }
+        if (!new_tf_img.value.startsWith("http")) new_tf_img.value = `http://${new_tf_img.value}`;
+        if (new_tf_img.value.includes("?")) new_tf_img.value = new_tf_img.value.split("?")[0]; // Trim
         elements.tf_data_form.style.display = "inline";
         elements.new_tf_submit.style.display = "none";
         elements.tf_file_container.style.display = "none";

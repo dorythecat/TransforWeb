@@ -207,22 +207,6 @@ button.btn:hover {
     box-shadow: 0 0 10px var(--bg-secondary);
 }
 
-button#submit_tf_btn {
-    margin-top: 10px;
-    font-size: 250%;
-    padding: 10px 20px;
-    border-radius: 10px;
-    background-color: var(--accent-color);
-    color: var(--hover-bg);
-    border: var(--text-primary) solid 2px;
-}
-
-button#submit_tf_btn:hover {
-    background-color: var(--hover-bg);
-    color: var(--accent-color);
-    box-shadow: 0 0 20px var(--accent-color);
-}
-
 #new_tf_output {
     margin: 20px;
     width: 90%;

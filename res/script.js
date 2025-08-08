@@ -72,7 +72,8 @@ function encode_tsf(into, image_url, options = {
 function decode_tsf(tsf) {
     tsf = tsf.split(";");
 
-    if (tsf[0] !== "15" || tsf.length !== 23) return;
+    const version = Number(tsf[0]);
+    if ((version !== 15 && tsf.length !== 23) || (version !== 1 && tsf.length === 20)) return;
 
     const getArray = (index) => {
         if (tsf[index] === "0") return [];
@@ -85,10 +86,10 @@ function decode_tsf(tsf) {
     return {
         into: tsf[1],
         image_url: tsf[2],
-        big: tsf[3] === "1",
-        small: tsf[4] === "1",
-        hush: tsf[5] === "1",
-        backwards: tsf[6] === "1",
+        big: (version === 15 && tsf[3] === "1") || (version === 1 && (Number(tsf[3]) & 1) === 1),
+        small: (version === 15 && tsf[3] === "1") || (version === 1 && (Number(tsf[3]) & 2) === 2),
+        hush: (version === 15 && tsf[3] === "1") || (version === 1 && (Number(tsf[3]) & 4) === 4),
+        backwards: (version === 15 && tsf[3] === "1") || (version === 1 && (Number(tsf[3]) & 8) === 8),
         stutter: parseInt(tsf[7]),
         proxy_prefix: tsf[8],
         proxy_suffix: tsf[9],

@@ -51,7 +51,7 @@ function encode_tsf(into, image_url, options = {
     number += (Number(options.backwards) << 3);
 
     // Generate arrays and make it into the proper data to return
-    return ["15",
+    return ["1",
             into,
             image_url,
             number,

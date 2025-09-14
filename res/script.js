@@ -70,15 +70,17 @@ function encode_tsf(into, image_url, options = {
 }
 
 function decode_tsf(tsf) {
-    tsf = tsf.split("\\;%");
+    let sep = ";";
+    if (tsf.includes("\\;%")) sep = "\\;%";
+    tsf = tsf.split(sep);
 
     const version = Number(tsf[0]);
     if ((version !== 15 && tsf.length !== 23) || (version !== 1 && tsf.length === 20)) return;
 
     const getArray = (index) => {
         if (tsf[index] === "0") return [];
-        return tsf[index + 1].split("\\,%").map(p => {
-            const [content, value] = p.split("\\|%");
+        return tsf[index + 1].split(sep === "\\;%" ? "\\,%" : ",").map(p => {
+            const [content, value] = p.split(sep === "\\;%" ? "\\|%" : "|");
             return {content, value};
         });
     }

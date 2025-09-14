@@ -10,7 +10,7 @@ const strJSON = (integer) => {
 // Cookie utilities
 const setCookie = (cname, cvalue, exmins) => {
     const expires = new Date(Date.now() + exmins * 60 * 1000).toUTCString();
-    document.cookie = `${cname}=${cvalue};Expires=${expires};Path=/;SameSite=Strict;`;
+    document.cookie = `${cname}=${cvalue};Expires=${expires};Path=;SameSite=Strict;`;
 };
 
 const getCookie = (cname) => {
@@ -79,8 +79,8 @@ function decode_tsf(tsf) {
 
     const getArray = (index) => {
         if (tsf[index] === "0") return [];
-        return tsf[index + 1].split(sep === "/;%" ? "/,%" : ",").map(p => {
-            const [content, value] = p.split(sep === "/;%" ? "/|%" : "|");
+        return tsf[index + 1].split(sep === ";%" ? ",%" : ",").map(p => {
+            const [content, value] = p.split(sep === ";%" ? "|%" : "|");
             return {content, value};
         });
     }

@@ -97,11 +97,11 @@ function decode_tsf(tsf) {
         proxy_suffix: version === 15 ? tsf[9] : tsf[6],
         bio: version === 15 ? tsf[10] : tsf[7],
         prefixes: getArray(version === 15 ? 11 : 8),
-        suffixes: getArray(version === 15 ? 12 : 9),
-        sprinkles: getArray(version === 15 ? 13 : 10),
-        muffles: getArray(version === 15 ? 14 : 11),
-        alt_muffles: getArray(version === 15 ? 15 : 12),
-        censors: getArray(version === 15 ? 16 : 13)
+        suffixes: getArray(version === 15 ? 13 : 10),
+        sprinkles: getArray(version === 15 ? 15 : 12),
+        muffles: getArray(version === 15 ? 17 : 14),
+        alt_muffles: getArray(version === 15 ? 19 : 16),
+        censors: getArray(version === 15 ? 21 : 18)
     }
 }
 

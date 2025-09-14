@@ -79,8 +79,8 @@ function decode_tsf(tsf) {
 
     const getArray = (index) => {
         if (tsf[index] === "0") return [];
-        return tsf[index + 1].split(sep === "\\;%" ? "\\,%" : ",").map(p => {
-            const [content, value] = p.split(sep === "\\;%" ? "\\|%" : "|");
+        return tsf[index + 1].split(sep === "/;%" ? "/,%" : ",").map(p => {
+            const [content, value] = p.split(sep === "/;%" ? "/|%" : "|");
             return {content, value};
         });
     }

@@ -89,19 +89,19 @@ function decode_tsf(tsf) {
         into: tsf[1],
         image_url: tsf[2],
         big: (version === 15 && tsf[3] === "1") || (version === 1 && (Number(tsf[3]) & 1) === 1),
-        small: (version === 15 && tsf[3] === "1") || (version === 1 && (Number(tsf[3]) & 2) === 2),
-        hush: (version === 15 && tsf[3] === "1") || (version === 1 && (Number(tsf[3]) & 4) === 4),
-        backwards: (version === 15 && tsf[3] === "1") || (version === 1 && (Number(tsf[3]) & 8) === 8),
-        stutter: parseInt(tsf[7]),
-        proxy_prefix: tsf[8],
-        proxy_suffix: tsf[9],
-        bio: tsf[10],
-        prefixes: getArray(11),
-        suffixes: getArray(13),
-        sprinkles: getArray(15),
-        muffles: getArray(17),
-        alt_muffles: getArray(19),
-        censors: getArray(21)
+        small: (version === 15 && tsf[4] === "1") || (version === 1 && (Number(tsf[3]) & 2) === 2),
+        hush: (version === 15 && tsf[5] === "1") || (version === 1 && (Number(tsf[3]) & 4) === 4),
+        backwards: (version === 15 && tsf[6] === "1") || (version === 1 && (Number(tsf[3]) & 8) === 8),
+        stutter: Number(version === 15 ? tsf[7] : tsf[4]),
+        proxy_prefix: version === 15 ? tsf[8] : tsf[5],
+        proxy_suffix: version === 15 ? tsf[9] : tsf[6],
+        bio: version === 15 ? tsf[10] : tsf[7],
+        prefixes: getArray(version === 15 ? 11 : 8),
+        suffixes: getArray(version === 15 ? 12 : 9),
+        sprinkles: getArray(version === 15 ? 13 : 10),
+        muffles: getArray(version === 15 ? 14 : 11),
+        alt_muffles: getArray(version === 15 ? 15 : 12),
+        censors: getArray(version === 15 ? 16 : 13)
     }
 }
 

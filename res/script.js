@@ -42,7 +42,7 @@ function encode_tsf(into, image_url, options = {
 }) {
     // Helper function to process arrays
     const processArray = (arr) =>
-        !arr?.length ? ["0", ""] : ["1", arr.map(({content, value}) => `${content}|${value}`).join(",")];
+        !arr?.length ? ["0", ""] : ["1", arr.map(({content, value}) => `${content}\\|%${value}`).join("\\,%")];
 
     let number = 0;
     number += (Number(options.big) << 0);
@@ -65,20 +65,20 @@ function encode_tsf(into, image_url, options = {
             ...processArray(options.muffles),
             ...processArray(options.alt_muffles),
             ...processArray(options.censors)
-    ].join(";");
+    ].join("\\;%");
 
 }
 
 function decode_tsf(tsf) {
-    tsf = tsf.split(";");
+    tsf = tsf.split("\\;%");
 
     const version = Number(tsf[0]);
     if ((version !== 15 && tsf.length !== 23) || (version !== 1 && tsf.length === 20)) return;
 
     const getArray = (index) => {
         if (tsf[index] === "0") return [];
-        return tsf[index + 1].split(",").map(p => {
-            const [content, value] = p.split("|");
+        return tsf[index + 1].split("\\,%").map(p => {
+            const [content, value] = p.split("\\|%");
             return {content, value};
         });
     }

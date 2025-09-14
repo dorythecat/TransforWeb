@@ -75,7 +75,7 @@ function decode_tsf(tsf) {
     tsf = tsf.split(sep);
 
     const version = Number(tsf[0]);
-    if ((version !== 15 && tsf.length !== 23) || (version !== 1 && tsf.length === 20)) return;
+    if ((version !== 15 && tsf.length === 23) && (version !== 1 && tsf.length !== 20)) return;
 
     const getArray = (index) => {
         if (tsf[index] === "0") return [];

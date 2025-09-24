@@ -42,7 +42,7 @@ function encode_tsf(into, image_url, options = {
 }) {
     // Helper function to process arrays
     const processArray = (arr) =>
-        !arr?.length ? ["0", ""] : ["1", arr.map(({content, value}) => `${content}\\|%${value}`).join(",%")];
+        !arr?.length ? ["0", ""] : ["1", arr.map(({content, value}) => `${content}|%${value}`).join(",%")];
 
     // Generate arrays and make it into the proper data to return
     return ["1",

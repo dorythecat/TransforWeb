@@ -1,5 +1,4 @@
 // Global variables
-const TM_API = "http://api.transformate.live";
 const URL_REGEX = /[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&\/=]*)/
 
 // General utility
@@ -99,37 +98,6 @@ function decode_tsf(tsf) {
     }
 }
 
-// Token handling
-if (window.location.href.includes("token")) {
-    setCookie("token", window.location.href.split("=")[1], 7 * 24 * 60); // 7 days
-    window.location.href = "index.html";
-}
-
-const login = document.getElementById("login");
-const logout = document.getElementById("logout");
-
-if (getCookie("token") !== "") {
-    login.classList.add("hidden");
-    logout.classList.remove("hidden")
-}
-
-login.onclick = function () {
-    window.location.href = "https://discord.com/oauth2/authorize?client_id=1274436972621987881&response_type=code&redirect_uri=http%3A%2F%2Fapi.transformate.live%2Flogin%3Fredirect_url%3Dhttp%3A%2F%2Fwww.transformate.live&scope=identify+guilds";
-}
-
-logout.onclick = async function () {
-    fetch(`${TM_API}/logout`, {
-        method: 'POST',
-        headers: {
-            'Authorization': `Bearer ${getCookie('token')}`
-        }
-    }).catch(e => console.error('Error during logout:', e)).then(r => {
-        if (r.status !== 200) return r.text().then(r => alert(r));
-        setCookie("token", null, -1);
-        window.location.href = "index.html";
-    })
-}
-
 // TSF Editor page
 if (window.location.href.includes("tsf_editor.html")) {
     const elements = {
@@ -145,21 +113,6 @@ if (window.location.href.includes("tsf_editor.html")) {
         backwards: document.getElementById("backwards"),
         bio: document.getElementById("bio")
     };
-
-    if (getCookie("token") !== "") {
-        fetch(`${TM_API}/users/me/discord`, {
-            method: "GET",
-            headers: {
-                "Authorization": `Bearer ${getCookie("token")}`
-            }
-        }).catch(e => console.error(e)).then(r => {
-            if (r.status !== 200) return r.text().then(r => alert(r));
-            r.text().then(r => strJSON(r)).then(r => {
-                elements.new_tf_name.value = r.username;
-                elements.new_tf_img.value = `https://cdn.discordapp.com/avatars/${r.id}/${r.avatar}.png`;
-            })
-        });
-    }
 
     const sliderPairs = [
         { name: 'stutter', default: 0 },
@@ -258,110 +211,6 @@ if (window.location.href.includes("tsf_editor.html")) {
         elements.tf_data_form.style.display = "inline";
         elements.new_tf_submit.style.display = "none";
         elements.tf_file_container.style.display = "none";
-    };
-
-    let loaded_servers = [];
-    document.getElementById("submit_tf_btn").onclick = async () => {
-        // Generate TSF string with provided data
-        const tsf_data = encode_tsf(
-            elements.new_tf_name.value,
-            elements.new_tf_img.value,
-            {
-                big: elements.big.checked,
-                small: elements.small.checked,
-                hush: elements.hush.checked,
-                backwards: elements.backwards.checked,
-                stutter: parseInt(document.getElementById("stutter_value").value),
-                proxy_prefix: null,
-                proxy_suffix: null,
-                bio: elements.bio.value,
-                prefixes: listConfigs.prefix.list,
-                suffixes: listConfigs.suffix.list,
-                sprinkles: listConfigs.sprinkle.list,
-                muffles: listConfigs.muffle.list,
-                alt_muffles: listConfigs.alt_muffle.list,
-                censors: listConfigs.censor.list
-            }
-        );
-
-        // Set output text
-        const new_tf_output = document.getElementById("new_tf_output");
-        new_tf_output.value = tsf_data;
-
-        // Select and copy the output when the associated button is pressed
-        document.getElementById("copy_tf_output").onclick = () => {
-            new_tf_output.select();
-            new_tf_output.setSelectionRange(0, 99999); // Mobile compatibility
-            navigator.clipboard.writeText(new_tf_output.value).then(
-                () => alert("Copied to clipboard!"),
-                () => alert("Failed to copy to clipboard!")
-            );
-        }
-
-        // Download the TSF-compliant file when the associated button is pressed
-        document.getElementById("download_tf_output").onclick = () => {
-            const element = document.createElement('a');
-            element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(tsf_data));
-            element.setAttribute('download', `${elements.new_tf_name.value}.tsf`);
-            element.click();
-            element.remove();
-        }
-
-        const loading_container = document.getElementById("loading_container");
-
-        // Check if the user is logged in, if they are, allow them to select what server to apply the transformation to,
-        // and wait before loading the rest of the elements down here
-        if (getCookie("token") && loaded_servers.length === 0) {
-            // Make the throbber visible
-            loading_container.style.display = "block";
-
-            fetch(`${TM_API}/users/me/discord/servers`, {
-                method: 'GET',
-                headers: {
-                    'Authorization': `Bearer ${getCookie('token')}`
-                }
-            }).catch(e => console.error(e)).then(r => {
-                if (r.status !== 200) return r.text().then(r => alert(r));
-                r.text().then(r => strJSON(r)).then(servers => {
-                    loaded_servers = servers;
-                    const serverSelect = document.getElementById("tf_output_server");
-                    for (const server of loaded_servers) {
-                        const option = document.createElement("option");
-                        option.value = server['id'];
-                        option.textContent = server['name'];
-                        serverSelect.appendChild(option);
-                    }
-
-                    const button = document.getElementById("apply_tf_output");
-                    button.onclick = async () => {
-                        const server = serverSelect.value;
-                        if (server === "") return;
-                        fetch(`${TM_API}/users/me/tsf/${server}`, {
-                            method: 'PUT',
-                            headers: {
-                                'Authorization': `Bearer ${getCookie('token')}`,
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify(tsf_data)
-                        }).catch(e => console.error(e)).then(r => {
-                            if (r.status !== 200) return r.text().then(r => alert(r));
-                            r.json().then(r => {
-                                alert("Transformation applied successfully!");
-                                window.location.href = "tsf_editor.html";
-                            });
-                        });
-                    }
-
-                    serverSelect.classList.remove("hidden");
-                    button.classList.remove("hidden");
-                });
-            });
-
-            loading_container.style.display = "none";
-            document.getElementById("tf_submit_output").style.display = "block";
-        }
-        loading_container.style.display = "none";
-        document.getElementById("tf_submit_output").style.display = "block";
     };
 
     const inputElement = document.getElementById("tf_file_input");

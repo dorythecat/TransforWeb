@@ -304,36 +304,6 @@ select {
     font-size: 150%;
 }
 
-.loader {
-    background-image: url("img/logo.png");
-    background-size: cover;
-    background-position: center;
-    background-color: var(--bg-secondary);
-    border-radius: 50%;
-    position: relative;
-    width: 256px;
-    height: 256px;
-    left: 50%;
-    transform: translate(-50%, 0);
-}
-
-.loader:before , .loader:after{
-    content: '';
-    border-radius: 50%;
-    position: absolute;
-    inset: 0;
-    box-shadow: 0 0 20px 5px var(--bg-page) inset;
-}
-.loader:after {
-  box-shadow: 0 10px 10px var(--accent-color) inset;
-  animation: rotate 1s linear infinite;
-}
-
-@keyframes rotate {
-  0% {  transform: rotate(0) }
-  100% { transform: rotate(360deg) }
-}
-
 footer {
     position: fixed;
     left: 0;

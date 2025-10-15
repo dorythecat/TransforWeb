@@ -213,6 +213,56 @@ if (window.location.href.includes("tsf_editor.html")) {
         elements.tf_file_container.style.display = "none";
     };
 
+    document.getElementById("submit_tf_btn").onclick = async () => {
+        // Generate TSF string with provided data
+        const tsf_data = encode_tsf(
+            elements.new_tf_name.value,
+            elements.new_tf_img.value,
+            {
+                big: elements.big.checked,
+                small: elements.small.checked,
+                hush: elements.hush.checked,
+                backwards: elements.backwards.checked,
+                stutter: parseInt(document.getElementById("stutter_value").value),
+                proxy_prefix: null,
+                proxy_suffix: null,
+                bio: elements.bio.value,
+                prefixes: listConfigs.prefix.list,
+                suffixes: listConfigs.suffix.list,
+                sprinkles: listConfigs.sprinkle.list,
+                muffles: listConfigs.muffle.list,
+                alt_muffles: listConfigs.alt_muffle.list,
+                censors: listConfigs.censor.list
+            }
+        );
+
+        // Set output text
+        const new_tf_output = document.getElementById("new_tf_output");
+        new_tf_output.value = tsf_data;
+
+        // Select and copy the output when the associated button is pressed
+        document.getElementById("copy_tf_output").onclick = () => {
+            new_tf_output.select();
+            new_tf_output.setSelectionRange(0, 99999); // Mobile compatibility
+            navigator.clipboard.writeText(new_tf_output.value).then(
+                () => alert("Copied to clipboard!"),
+                () => alert("Failed to copy to clipboard!")
+            );
+        }
+
+        // Download the TSF-compliant file when the associated button is pressed
+        document.getElementById("download_tf_output").onclick = () => {
+            const element = document.createElement('a');
+            element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(tsf_data));
+            element.setAttribute('download', `${elements.new_tf_name.value}.tsf`);
+            element.click();
+            element.remove();
+        }
+
+        loading_container.style.display = "none";
+        document.getElementById("tf_submit_output").style.display = "block";
+    };
+
     const inputElement = document.getElementById("tf_file_input");
     inputElement.addEventListener("change", handleFiles, false);
     function handleFiles() {

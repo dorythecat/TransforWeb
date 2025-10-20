@@ -259,7 +259,6 @@ if (window.location.href.includes("tsf_editor.html")) {
             element.remove();
         }
 
-        loading_container.style.display = "none";
         document.getElementById("tf_submit_output").style.display = "block";
     };
 

@@ -1,24 +1,10 @@
 // Global variables
 const URL_REGEX = /[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&\/=]*)/
 
-// General utility
-const strJSON = (integer) => {
-    return JSON.parse(integer.replace(/("[^"]*"\s*:\s*)(\d{16,})/g, '$1"$2"'));
-}
-
 // Cookie utilities
 const setCookie = (cname, cvalue, exmins) => {
     const expires = new Date(Date.now() + exmins * 60 * 1000).toUTCString();
     document.cookie = `${cname}=${cvalue};Expires=${expires};Path=;SameSite=Strict;`;
-};
-
-const getCookie = (cname) => {
-    const name = `${cname}=`;
-    return document.cookie
-        .split(';')
-        .map(c => c.trim())
-        .find(c => c.startsWith(name))
-        ?.substring(name.length) || '';
 };
 
 // TSF utilities

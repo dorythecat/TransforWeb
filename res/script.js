@@ -15,8 +15,6 @@ function encode_tsf(into, image_url, options = {
     hush: false,
     backwards: false,
     stutter: 0,
-    proxy_prefix: null,
-    proxy_suffix: null,
     bio: null,
     prefixes: [],
     suffixes: [],
@@ -27,23 +25,21 @@ function encode_tsf(into, image_url, options = {
 }) {
     // Helper function to process arrays
     const processArray = (arr) =>
-        !arr?.length ? ["0", ""] : ["1", arr.map(({content, value}) => `${content}|%${value}`).join(",%")];
+        !arr?.length ? "" : [arr.map(({content, value}) => `${content}|%${value}`).join(",%")];
 
     // Generate arrays and make it into the proper data to return
-    return ["1",
+    return ["2.0",
             into,
             image_url,
             (Number(options.big) << 0) + (Number(options.small) << 1) + (Number(options.hush) << 2) + (Number(options.backwards) << 3),
             options.stutter.toString(),
-            options.proxy_prefix ?? "",
-            options.proxy_suffix ?? "",
             options.bio ?? "",
-            ...processArray(options.prefixes),
-            ...processArray(options.suffixes),
-            ...processArray(options.sprinkles),
-            ...processArray(options.muffles),
-            ...processArray(options.alt_muffles),
-            ...processArray(options.censors)
+            processArray(options.prefixes),
+            processArray(options.suffixes),
+            processArray(options.sprinkles),
+            processArray(options.muffles),
+            processArray(options.alt_muffles),
+            processArray(options.censors)
     ].join(";%");
 
 }
@@ -54,9 +50,38 @@ function decode_tsf(tsf) {
     tsf = tsf.split(sep);
 
     const version = Number(tsf[0]);
-    if ((version !== 15 && tsf.length === 23) && (version !== 1 && tsf.length !== 20)) return;
+    if ((version === 15 && tsf.length !== 23) &&
+        (version === 1 && tsf.length !== 20) &&
+        (version === 2 && tsf.length !== 12)) return;
 
-    const getArray = (index) => {
+    if (version === 2) {
+        const getArrayV2 = (index) => {
+            if (tsf[index] === "") return [];
+            return tsf[index].split(",%").map(p => {
+                const [content, value] = p.split("|%");
+                return {content, value};
+            });
+        }
+
+        return {
+            into: tsf[1],
+            image_url: tsf[2],
+            big: (Number(tsf[3]) & 1) === 1,
+            small: (Number(tsf[3]) & 2) === 2,
+            hush: (Number(tsf[3]) & 4) === 4,
+            backwards: (Number(tsf[3]) & 8) === 8,
+            stutter: Number(tsf[4]),
+            bio: tsf[5],
+            prefixes: getArrayV2(6),
+            suffixes: getArrayV2(7),
+            sprinkles: getArrayV2(8),
+            muffles: getArrayV2(9),
+            alt_muffles: getArrayV2(10),
+            censors: getArrayV2(11)
+        }
+    }
+
+    const getArrayV1 = (index) => {
         if (tsf[index] === "0") return [];
         return tsf[index + 1].split(sep === ";%" ? ",%" : ",").map(p => {
             const [content, value] = p.split(sep === ";%" ? "|%" : "|");
@@ -75,12 +100,12 @@ function decode_tsf(tsf) {
         proxy_prefix: version === 15 ? tsf[8] : tsf[5],
         proxy_suffix: version === 15 ? tsf[9] : tsf[6],
         bio: version === 15 ? tsf[10] : tsf[7],
-        prefixes: getArray(version === 15 ? 11 : 8),
-        suffixes: getArray(version === 15 ? 13 : 10),
-        sprinkles: getArray(version === 15 ? 15 : 12),
-        muffles: getArray(version === 15 ? 17 : 14),
-        alt_muffles: getArray(version === 15 ? 19 : 16),
-        censors: getArray(version === 15 ? 21 : 18)
+        prefixes: getArrayV1(version === 15 ? 11 : 8),
+        suffixes: getArrayV1(version === 15 ? 13 : 10),
+        sprinkles: getArrayV1(version === 15 ? 15 : 12),
+        muffles: getArrayV1(version === 15 ? 17 : 14),
+        alt_muffles: getArrayV1(version === 15 ? 19 : 16),
+        censors: getArrayV1(version === 15 ? 21 : 18)
     }
 }
 
@@ -210,8 +235,6 @@ if (window.location.href.includes("tsf_editor.html")) {
                 hush: elements.hush.checked,
                 backwards: elements.backwards.checked,
                 stutter: parseInt(document.getElementById("stutter_value").value),
-                proxy_prefix: null,
-                proxy_suffix: null,
                 bio: elements.bio.value,
                 prefixes: listConfigs.prefix.list,
                 suffixes: listConfigs.suffix.list,

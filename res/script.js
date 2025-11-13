@@ -1,12 +1,6 @@
 // Global variables
 const URL_REGEX = /[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&\/=]*)/
 
-// Cookie utilities
-const setCookie = (cname, cvalue, exmins) => {
-    const expires = new Date(Date.now() + exmins * 60 * 1000).toUTCString();
-    document.cookie = `${cname}=${cvalue};Expires=${expires};Path=;SameSite=Strict;`;
-};
-
 // TSF utilities
 // See https://dorythecat.github.io/TransforMate/commands/transformation/export_tf.html#transformation-string-format
 function encode_tsf(into, image_url, options = {
